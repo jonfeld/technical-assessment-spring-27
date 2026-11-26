@@ -24,3 +24,33 @@ body {
   color: #DA291C;
   padding: 0 1rem;
 }
+
+.line-filter {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem 0;
+}
+
+.line-chip {
+  border: 2px solid var(--line-color);
+  background: white;
+  color: var(--line-color);
+  border-radius: 999px;
+  padding: 0.35rem 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+}
+
+.line-chip.active {
+  background: var(--line-color);
+  color: white;
+}
+
+.search {
+  padding: 0.4rem 0.75rem;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  min-width: 220px;
+}

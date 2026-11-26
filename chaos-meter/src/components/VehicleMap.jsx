@@ -1,14 +1,8 @@
 import { MapContainer, TileLayer, CircleMarker, Popup } from 'react-leaflet'
+import { getLineColor } from '../lines'
 
 const BOSTON = [42.3601, -71.0589]
 
-const LINE_COLORS = {
-  Red: '#DA291C',
-  Mattapan: '#DA291C',
-  Orange: '#ED8B00',
-  Blue: '#003DA5',
-  Green: '#00843D',
-}
 
 const STATUS_TEXT = {
   IN_TRANSIT_TO: 'In transit to',
@@ -16,10 +10,6 @@ const STATUS_TEXT = {
   STOPPED_AT: 'Stopped at',
 }
 
-function getLineColor(routeId) {
-  if (routeId.startsWith('Green')) return LINE_COLORS.Green
-  return LINE_COLORS[routeId] ?? '#888888'
-}
 
 function VehicleMap({ vehicles, stopsById }) {
   return (
