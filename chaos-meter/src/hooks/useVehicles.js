@@ -2,12 +2,13 @@ import { useCallback, useEffect, useState } from 'react'
 
 const API_KEY = import.meta.env.VITE_MBTA_API_KEY
 const VEHICLES_URL =
-  `https://api-v3.mbta.com/vehicles?filter[route_type]=0,1&include=stop&api_key=${API_KEY}`
+  `https://api-v3.mbta.com/vehicles?filter[route_type]=0,1&include=stop,route&api_key=${API_KEY}`
 const REFRESH_MS = 10000
 
 export function useVehicles(autoRefresh) {
   const [vehicles, setVehicles] = useState([])
   const [stopsById, setStopsById] = useState({})
+  const [routesById, setRoutesById] = useState({})
   const [error, setError] = useState(null)
   const [lastUpdated, setLastUpdated] = useState(null)
 
@@ -18,11 +19,16 @@ export function useVehicles(autoRefresh) {
       const json = await res.json()
 
       const stops = {}
+      const routes = {}
       for (const item of json.included ?? []) {
         if (item.type === 'stop') stops[item.id] = item
+        if (item.type === 'route') routes[item.id] = item
       }
 
       setStopsById(stops)
+      setRoutesById(routes)
+
+
       setVehicles(json.data)
       setLastUpdated(new Date())
       setError(null)
@@ -38,5 +44,5 @@ export function useVehicles(autoRefresh) {
     return () => clearInterval(intervalId)
   }, [autoRefresh, loadVehicles])
 
-  return { vehicles, stopsById, error, lastUpdated, refresh: loadVehicles }
+  return { vehicles, stopsById, routesById, error, lastUpdated, refresh: loadVehicles }
 }

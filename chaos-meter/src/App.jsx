@@ -8,7 +8,7 @@ function App() {
   const [autoRefresh, setAutoRefresh] = useState(true)
   const [selectedLines, setSelectedLines] = useState(LINES.map((line) => line.id))
   const [search, setSearch] = useState('')
-  const { vehicles, stopsById, error, lastUpdated, refresh } = useVehicles(autoRefresh)
+  const { vehicles, stopsById, routesById, error, lastUpdated, refresh } = useVehicles(autoRefresh)
 
   function toggleLine(lineId) {
     setSelectedLines((current) =>
@@ -61,7 +61,7 @@ function App() {
 
       {error && <p className="error">Couldn't update: {error}</p>}
 
-      <VehicleMap vehicles={filteredVehicles} stopsById={stopsById} />
+      <VehicleMap vehicles={filteredVehicles} stopsById={stopsById} routesById={routesById} />
     </main>
   )
 }

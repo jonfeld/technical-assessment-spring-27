@@ -11,7 +11,7 @@ const STATUS_TEXT = {
 }
 
 
-function VehicleMap({ vehicles, stopsById }) {
+function VehicleMap({ vehicles, stopsById, routesById }) {
   return (
     <MapContainer center={BOSTON} zoom={12} className="vehicle-map">
             <TileLayer
@@ -20,8 +20,10 @@ function VehicleMap({ vehicles, stopsById }) {
       />
 
       {vehicles.map((v) => {
-        const { latitude, longitude, current_status, label, updated_at } = v.attributes
-        const routeId = v.relationships.route.data?.id ?? 'No route'
+        const { latitude, longitude, current_status, label, updated_at, direction_id } = v.attributes        const routeId = v.relationships.route.data?.id ?? 'No route'
+        const route = routesById[routeId]
+        const lineName = route?.attributes.long_name ?? routeId
+        const destination = route?.attributes.direction_destinations?.[direction_id]
         const stopId = v.relationships.stop.data?.id
         const stopName = stopsById[stopId]?.attributes.name ?? 'unknown stop'
 
@@ -37,12 +39,13 @@ function VehicleMap({ vehicles, stopsById }) {
               fillOpacity: 1,
             }}
           >
-            <Popup>
-              <strong>{routeId}</strong> · Car {label}
+              <Popup>
+              <strong>{lineName}</strong>
+              {destination && <> → {destination}</>}
               <br />
               {STATUS_TEXT[current_status] ?? current_status} {stopName}
               <br />
-              <small>Updated {new Date(updated_at).toLocaleTimeString()}</small>
+              <small>Car {label} · Updated {new Date(updated_at).toLocaleTimeString()}</small>
             </Popup>
           </CircleMarker>
         )
