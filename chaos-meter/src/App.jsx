@@ -1,68 +1,55 @@
 import { useState } from 'react'
-import VehicleMap from './components/VehicleMap'
-import LineFilter from './components/LineFilter'
+import { NavLink, Route, Routes } from 'react-router'
 import { useVehicles } from './hooks/useVehicles'
-import { LINES, getLineId } from './lines'
+import MapView from './views/MapView'
+import AlertsView from './views/AlertsView'
+import AnalyticsView from './views/AnalyticsView'
 
 function App() {
   const [autoRefresh, setAutoRefresh] = useState(true)
-  const [selectedLines, setSelectedLines] = useState(LINES.map((line) => line.id))
-  const [search, setSearch] = useState('')
   const { vehicles, stopsById, routesById, error, lastUpdated, refresh } = useVehicles(autoRefresh)
 
-  function toggleLine(lineId) {
-    setSelectedLines((current) =>
-      current.includes(lineId)
-        ? current.filter((id) => id !== lineId)
-        : [...current, lineId]
-    )
-  }
-
-  const query = search.trim().toLowerCase()
-  const filteredVehicles = vehicles.filter((v) => {
-    const routeId = v.relationships.route.data?.id ?? ''
-    if (!selectedLines.includes(getLineId(routeId))) return false
-    if (query === '') return true
-
-    const stopId = v.relationships.stop.data?.id
-    const stopName = stopsById[stopId]?.attributes.name ?? ''
-    return stopName.toLowerCase().includes(query) || routeId.toLowerCase().includes(query)
-  })
-
   return (
-    <main>
-      <h1>Chaos Meter</h1>
+    <>
+      <header className="app-header">
+        <h1>Chaos Meter</h1>
 
-      <LineFilter selectedLines={selectedLines} onToggle={toggleLine} />
+        <nav className="nav">
+          <NavLink to="/" end>Live Map</NavLink>
+          <NavLink to="/alerts">Alerts</NavLink>
+          <NavLink to="/analytics">Analytics</NavLink>
+        </nav>
 
-      <div className="controls">
-        <input
-          type="search"
-          className="search"
-          placeholder="Search stops (e.g. Kenmore)"
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-        />
-        <button onClick={refresh}>Refresh now</button>
-        <label>
-          <input
-            type="checkbox"
-            checked={autoRefresh}
-            onChange={(e) => setAutoRefresh(e.target.checked)}
-          />
-          Auto-refresh every 10s
-        </label>
-        <span>
-          {lastUpdated
-            ? `${filteredVehicles.length} of ${vehicles.length} trains · updated ${lastUpdated.toLocaleTimeString()}`
-            : 'Loading trains…'}
-        </span>
-      </div>
+        <div className="controls">
+          <button onClick={refresh}>Refresh now</button>
+          <label>
+            <input
+              type="checkbox"
+              checked={autoRefresh}
+              onChange={(e) => setAutoRefresh(e.target.checked)}
+            />
+            Auto-refresh every 10s
+          </label>
+          <span>
+            {lastUpdated ? `Updated ${lastUpdated.toLocaleTimeString()}` : 'Loading trains…'}
+          </span>
+        </div>
+      </header>
 
       {error && <p className="error">Couldn't update: {error}</p>}
 
-      <VehicleMap vehicles={filteredVehicles} stopsById={stopsById} routesById={routesById} />
-    </main>
+      <main>
+        <Routes>
+          <Route
+            path="/"
+            element={<MapView vehicles={vehicles} stopsById={stopsById} routesById={routesById} />}
+          />
+          <Route path="/alerts" element={<AlertsView />} />
+          <Route path="/analytics" element={<AnalyticsView />} />
+          <Route path="*" element={<p className="view">Page not found.</p>} />
+        </Routes>
+      </main>
+    </>
   )
 }
 

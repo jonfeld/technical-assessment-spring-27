@@ -20,7 +20,8 @@ function VehicleMap({ vehicles, stopsById, routesById }) {
       />
 
       {vehicles.map((v) => {
-        const { latitude, longitude, current_status, label, updated_at, direction_id } = v.attributes        const routeId = v.relationships.route.data?.id ?? 'No route'
+        const { latitude, longitude, current_status, label, updated_at, direction_id } = v.attributes
+        const routeId = v.relationships.route.data?.id ?? 'No route'
         const route = routesById[routeId]
         const lineName = route?.attributes.long_name ?? routeId
         const destination = route?.attributes.direction_destinations?.[direction_id]
