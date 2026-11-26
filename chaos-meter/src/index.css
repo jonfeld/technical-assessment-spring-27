@@ -11,3 +11,16 @@ body {
   height: 80vh;
   width: 100%;
 }
+
+.controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.5rem 1rem;
+}
+
+.error {
+  color: #DA291C;
+  padding: 0 1rem;
+}
