@@ -1,13 +1,29 @@
 import { useState } from 'react'
 import { NavLink, Route, Routes } from 'react-router'
 import { useVehicles } from './hooks/useVehicles'
+import { useAlerts } from './hooks/useAlerts'
 import MapView from './views/MapView'
 import AlertsView from './views/AlertsView'
 import AnalyticsView from './views/AnalyticsView'
 
 function App() {
   const [autoRefresh, setAutoRefresh] = useState(true)
-  const { vehicles, stopsById, routesById, error, lastUpdated, refresh } = useVehicles(autoRefresh)
+    const {
+    vehicles,
+    stopsById,
+    routesById,
+    error: vehiclesError,
+    lastUpdated,
+    refresh: refreshVehicles,
+  } = useVehicles(autoRefresh)
+  const { alerts, error: alertsError, refresh: refreshAlerts } = useAlerts(autoRefresh)
+
+  const error = vehiclesError ?? alertsError
+
+  function refresh() {
+    refreshVehicles()
+    refreshAlerts()
+  }
 
   return (
     <>
@@ -44,7 +60,7 @@ function App() {
             path="/"
             element={<MapView vehicles={vehicles} stopsById={stopsById} routesById={routesById} />}
           />
-          <Route path="/alerts" element={<AlertsView />} />
+          <Route path="/alerts" element={<AlertsView alerts={alerts} />} />
           <Route path="/analytics" element={<AnalyticsView />} />
           <Route path="*" element={<p className="view">Page not found.</p>} />
         </Routes>

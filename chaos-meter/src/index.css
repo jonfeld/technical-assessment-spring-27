@@ -100,3 +100,78 @@ body {
 .view {
   padding: 1rem;
 }
+
+.view h2 {
+  margin: 0 0 0.5rem;
+}
+
+.view .line-filter {
+  padding: 0.5rem 0;
+}
+
+.facility-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin: 0.75rem 0;
+  font-size: 0.9rem;
+}
+
+.alert-list {
+  display: grid;
+  gap: 0.75rem;
+  max-width: 800px;
+}
+
+.alert-card {
+  border: 1px solid #e5e5e5;
+  border-left: 6px solid var(--line-color);
+  border-radius: 8px;
+  padding: 0.75rem 1rem;
+  background: white;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+}
+
+.alert-meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.8rem;
+}
+
+.line-tag {
+  color: white;
+  padding: 0.1rem 0.5rem;
+  border-radius: 999px;
+  font-weight: 600;
+}
+
+.alert-effect {
+  font-weight: 600;
+}
+
+.alert-severity {
+  margin-left: auto;
+  color: #666;
+}
+
+.alert-header {
+  margin: 0.5rem 0;
+  line-height: 1.4;
+}
+
+.alert-description {
+  white-space: pre-line;
+  color: #444;
+}
+
+.alert-card small {
+  color: #888;
+}
+
+.empty-state {
+  font-size: 1.1rem;
+  color: #555;
+  padding: 2rem 0;
+}
